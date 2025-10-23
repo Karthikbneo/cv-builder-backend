@@ -1,18 +1,12 @@
-# CV Builder — ES6 Backend (Extended)
-Features added: **File Uploads**, **PDF Download (Puppeteer)**, **Stripe Payments**.
+# CV Builder — Backend
 
-## Quickstart
 ```bash
-cp .env.example .env
-# Fill STRIPE_SECRET, STRIPE_WEBHOOK_SECRET, MONGODB_URI, JWT_*
+
 
 npm i
 npm run dev
 ```
 
-## Uploads
-- `POST /api/v1/uploads/image` (auth required) — form-data field name: `file`
-- Response: `{ url: "/uploads/<filename>" }`
 
 ## Payments (Stripe)
 1. Client calls `POST /api/v1/payments/intent` with `{ cvId, action: "download"|"share" }` to get `clientSecret`.
@@ -33,9 +27,6 @@ CURRENCY=inr
 - Endpoint: `GET /api/v1/cvs/:id/pdf` — requires a **succeeded** payment record for `{ user, cv, action: "download" }`.
 - Generator: Puppeteer renders a simple HTML resume and returns A4 PDF.
 
-## Security Notes
-- Do **not** commit `.env` to git.
-- Ensure webhook route uses **raw** body; configure your Express JSON parser globally before routes (done).
 
 
 ## Share Links (Payment-gated)
@@ -48,7 +39,7 @@ CURRENCY=inr
 
 ### Share Viewer (Public HTML)
 - `GET /api/v1/shares/:token/view` — a minimal, mobile-friendly HTML page for non-technical recipients. 
-  Includes buttons to open the same CV as PDF or JSON.
+  Includes buttons to open the same CV.
 
 
 ## Templates / Layouts
