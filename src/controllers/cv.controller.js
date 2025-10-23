@@ -44,8 +44,7 @@ export const deleteCV = async (req, res, next) => {
   } catch (e) { next(e); }
 };
 
-// --- PDF Download (requires succeeded payment) ---
-// cv.controller.js
+
 export const downloadPdf = async (req, res, next) => {
   try {
     const cv = await CV.findOne({ _id: req.params.id, user: req.user.id });
