@@ -13,7 +13,7 @@ export const createShareLink = async (req, res, next) => {
     const cv = await CV.findOne({ _id: cvId, user: req.user.id });
     if (!cv) throw createError(404, "CV not found");
 
-    // Ensure a succeeded payment for share exists
+
     const paid = await Payment.exists({ user: req.user.id, cv: cvId, action: "share", status: "succeeded" });
     if (!paid) return next(createError(402, "Payment Required"));
 

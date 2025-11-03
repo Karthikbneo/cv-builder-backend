@@ -58,7 +58,7 @@ export const downloadPdf = async (req, res, next) => {
     const pdfBuffer = await renderToPdfBuffer(cv);
     if (!pdfBuffer || !pdfBuffer.length) throw new Error("Empty PDF buffer");
 
-    // ✅ send as a binary Buffer with explicit length
+   
     res.writeHead(200, {
       "Content-Type": "application/pdf",
       "Content-Disposition": `attachment; filename="cv-${cv._id}.pdf"`,

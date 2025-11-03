@@ -10,11 +10,10 @@ const r = Router();
 r.post('/', requireAuth, async (req, res, next) => {
   try {
     const { cvId } = req.body;
-    // verify ownership
+   
     const cv = await CV.findOne({ _id: cvId, user: req.user.id });
     if (!cv) return res.status(404).json({ message: 'CV not found' });
 
-    // verify succeeded payment for 'share'
     const paid = await Payment.findOne({
       user: req.user.id,
       cv: cvId,
@@ -35,7 +34,7 @@ r.post('/', requireAuth, async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
-// Optional: get current share link
+
 r.get('/:cvId', requireAuth, async (req, res, next) => {
   try {
     const cv = await CV.findOne({ _id: req.params.cvId, user: req.user.id }).lean();

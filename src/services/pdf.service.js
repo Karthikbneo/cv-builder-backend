@@ -1,9 +1,6 @@
-// src/services/pdf.service.js
-//import puppeteer from "puppeteer";
+
 import puppeteer from "puppeteer-core"; 
-/**
- * Small helpers to normalize CV data for templates
- */
+
 const base = (cv) => ({
   name: cv?.profile?.name || "",
   email: cv?.profile?.email || "",
@@ -18,9 +15,7 @@ const base = (cv) => ({
   font: cv?.theme?.font || "Inter, Arial, Helvetica, sans-serif",
 });
 
-/**
- * Basic, modern, elegant templates (server-side printable HTML)
- */
+
 const tplClassic = (cv) => {
   const d = base(cv);
   return `<!doctype html>

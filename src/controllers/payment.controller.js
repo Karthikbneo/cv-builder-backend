@@ -128,7 +128,7 @@ export const webhook = async (req, res, next) => {
     const sig = req.headers["stripe-signature"];
     let event;
     try {
-      // IMPORTANT: this route must use express.raw({ type: 'application/json' })
+    
       event = stripe.webhooks.constructEvent(
         req.rawBody,
         sig,

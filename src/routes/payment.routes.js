@@ -8,26 +8,7 @@ import { runValidation } from "../middlewares/validate.js";
 
 const router = Router();
 
-/**
- * POST /api/v1/payments/intent
- * Auth: Bearer
- * Body:
- *  - cvId: MongoId (required)
- *  - action: 'download' | 'share' (required)
- *  - description: string (optional, 3–500 chars)
- *  - billing (optional):
- *      name: string (min 2)
- *      email: email (optional)
- *      address:
- *        line1: string
- *        city: string
- *        state: string
- *        postal_code: string
- *        country: 2-letter ISO (e.g. 'IN', 'US')
- */
 
-
-// src/routes/payment.routes.js
 router.post(
   "/verify",
   requireAuth,
@@ -88,12 +69,7 @@ router.post(
   createPaymentIntent
 );
 
-/**
- * POST /api/v1/payments/webhook
- * Stripe requires a raw body to verify the signature.
- * Mount this route with express.raw and BEFORE any global express.json()
- * OR ensure your app skips json parsing for this path.
- */
+
 router.post("/webhook", express.raw({ type: "application/json" }), webhook);
 
 export default router;

@@ -12,9 +12,7 @@ r.get("/:id", idParam, runValidation, getCV);
 r.put("/:id", idParam, runValidation, updateCV);
 r.delete("/:id", idParam, runValidation, deleteCV);
 
-r.get('/:id/pdf', requireAuth, downloadPdf);
+r.get('/:id/pdf', downloadPdf);
 
-// PDF download (requires payment)
-//r.get("/:id/pdf", idParam, runValidation, downloadPdf);
 
 export default r;
