@@ -15,7 +15,34 @@ export const listMyCVs = async (req, res, next) => {
 
 export const createCV = async (req, res, next) => {
   try {
-    const doc = await CV.create({ ...req.body, user: req.user.id });
+    // normalize month fields (accept YYYY-MM or YYYY-MM-DD from clients)
+    const normalizeMonths = (obj) => {
+      if (!obj || typeof obj !== "object") return obj;
+      const copy = { ...obj };
+      const normArr = (arr) => (Array.isArray(arr) ? arr.map((it) => {
+        if (!it || typeof it !== "object") return it;
+        const next = { ...it };
+        ["start", "end"].forEach((k) => {
+          if (next[k] === undefined || next[k] === null) return;
+          if (typeof next[k] === "string") {
+            const v = next[k].trim();
+            if (!v) { delete next[k]; return; }
+            // accept YYYY-MM or YYYY-MM-DD -> normalize to YYYY-MM
+            const m = v.match(/^(\d{4}-\d{2})(?:-\d{2})?$/);
+            if (m) next[k] = m[1];
+            else delete next[k];
+          }
+        });
+        return next;
+      }) : arr);
+
+      if (copy.education) copy.education = normArr(copy.education);
+      if (copy.experience) copy.experience = normArr(copy.experience);
+      return copy;
+    };
+
+    const payload = normalizeMonths({ ...req.body, user: req.user.id });
+    const doc = await CV.create(payload);
     res.status(201).json(doc);
   } catch (e) { next(e); }
 };
@@ -30,7 +57,32 @@ export const getCV = async (req, res, next) => {
 
 export const updateCV = async (req, res, next) => {
   try {
-    const doc = await CV.findOneAndUpdate({ _id: req.params.id, user: req.user.id }, req.body, { new: true });
+    const normalizeMonths = (obj) => {
+      if (!obj || typeof obj !== "object") return obj;
+      const copy = { ...obj };
+      const normArr = (arr) => (Array.isArray(arr) ? arr.map((it) => {
+        if (!it || typeof it !== "object") return it;
+        const next = { ...it };
+        ["start", "end"].forEach((k) => {
+          if (next[k] === undefined || next[k] === null) return;
+          if (typeof next[k] === "string") {
+            const v = next[k].trim();
+            if (!v) { delete next[k]; return; }
+            const m = v.match(/^(\d{4}-\d{2})(?:-\d{2})?$/);
+            if (m) next[k] = m[1];
+            else delete next[k];
+          }
+        });
+        return next;
+      }) : arr);
+
+      if (copy.education) copy.education = normArr(copy.education);
+      if (copy.experience) copy.experience = normArr(copy.experience);
+      return copy;
+    };
+
+    const payload = normalizeMonths(req.body);
+    const doc = await CV.findOneAndUpdate({ _id: req.params.id, user: req.user.id }, payload, { new: true });
     if (!doc) throw createError(404, "CV not found");
     res.json(doc);
   } catch (e) { next(e); }
